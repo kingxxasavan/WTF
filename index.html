@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WTF — messaging & chatbot</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">●</span>
+      <span class="brand-name">WTF</span>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="messaging">Messaging</button>
+      <button class="tab" data-tab="chatbot">Chatbot</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </nav>
+    <div class="topbar-right">
+      <label class="private-toggle" title="When on, nothing is written to localStorage. Everything is wiped when you close the tab.">
+        <input type="checkbox" id="privateToggle" />
+        <span>Private mode</span>
+      </label>
+    </div>
+  </header>
+
+  <div id="privateBanner" class="private-banner hidden">
+    Private mode is on. Chats, contacts and API keys live in this tab only and will be wiped when you close it.
+  </div>
+
+  <main id="view-messaging" class="view active">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <h2>Chats</h2>
+        <div class="sidebar-actions">
+          <button id="newChatBtn" title="New chat">+ Chat</button>
+          <button id="newGroupBtn" title="New group">+ Group</button>
+        </div>
+      </div>
+      <input id="chatSearch" class="search" placeholder="Search chats…" />
+      <ul id="chatList" class="chat-list"></ul>
+      <div class="sidebar-foot">
+        <button id="manageContactsBtn" class="link">Manage contacts</button>
+      </div>
+    </aside>
+
+    <section class="conversation">
+      <div id="convoEmpty" class="empty-state">
+        <p>Pick a chat on the left, or create a new one.</p>
+      </div>
+      <div id="convoView" class="hidden">
+        <header class="convo-head">
+          <div class="convo-meta">
+            <div class="convo-avatar" id="convoAvatar"></div>
+            <div>
+              <div class="convo-title" id="convoTitle"></div>
+              <div class="convo-sub" id="convoSub"></div>
+            </div>
+          </div>
+          <div class="convo-actions">
+            <button id="convoMembersBtn" class="link hidden">Members</button>
+            <button id="convoRenameBtn" class="link">Rename</button>
+            <button id="convoDeleteBtn" class="danger">Delete</button>
+          </div>
+        </header>
+        <div id="messageList" class="message-list"></div>
+        <footer class="composer">
+          <select id="composerSender" class="composer-sender" title="Send as"></select>
+          <textarea id="composerInput" rows="2" placeholder="Write a message… (Enter to send, Shift+Enter for newline)"></textarea>
+          <button id="composerSend">Send</button>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <main id="view-chatbot" class="view">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <h2>Chatbot</h2>
+        <div class="sidebar-actions">
+          <button id="newBotChatBtn" title="New AI conversation">+ New</button>
+        </div>
+      </div>
+      <ul id="botChatList" class="chat-list"></ul>
+    </aside>
+
+    <section class="conversation">
+      <div id="botEmpty" class="empty-state">
+        <p>Start a new AI conversation. Configure a provider in <a href="#" data-goto="settings">Settings</a>.</p>
+      </div>
+      <div id="botView" class="hidden">
+        <header class="convo-head">
+          <div class="convo-meta">
+            <div>
+              <div class="convo-title" id="botTitle"></div>
+              <div class="convo-sub" id="botSub"></div>
+            </div>
+          </div>
+          <div class="convo-actions">
+            <select id="botProviderSelect"></select>
+            <select id="botModelSelect"></select>
+            <button id="botRenameBtn" class="link">Rename</button>
+            <button id="botDeleteBtn" class="danger">Delete</button>
+          </div>
+        </header>
+        <div id="botMessageList" class="message-list"></div>
+        <footer class="composer">
+          <textarea id="botInput" rows="2" placeholder="Ask anything… (Enter to send, Shift+Enter for newline)"></textarea>
+          <button id="botSend">Send</button>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <main id="view-settings" class="view">
+    <section class="settings">
+      <h2>Providers</h2>
+      <p class="muted">API keys are stored in this browser only (localStorage, or session-only when private mode is on). Requests go directly from your browser to the provider.</p>
+
+      <div class="provider-card">
+        <h3>Anthropic (Claude)</h3>
+        <label>API key
+          <input type="password" id="key-anthropic" autocomplete="off" placeholder="sk-ant-…" />
+        </label>
+        <label>Default model
+          <select id="model-anthropic">
+            <option value="claude-opus-4-7">claude-opus-4-7</option>
+            <option value="claude-sonnet-4-6">claude-sonnet-4-6</option>
+            <option value="claude-haiku-4-5-20251001">claude-haiku-4-5-20251001</option>
+          </select>
+        </label>
+        <button class="link" data-test="anthropic">Test connection</button>
+        <span class="test-result" data-test-result="anthropic"></span>
+      </div>
+
+      <div class="provider-card">
+        <h3>OpenAI</h3>
+        <label>API key
+          <input type="password" id="key-openai" autocomplete="off" placeholder="sk-…" />
+        </label>
+        <label>Default model
+          <select id="model-openai">
+            <option value="gpt-4o">gpt-4o</option>
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="gpt-4.1">gpt-4.1</option>
+            <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+            <option value="o4-mini">o4-mini</option>
+          </select>
+        </label>
+        <button class="link" data-test="openai">Test connection</button>
+        <span class="test-result" data-test-result="openai"></span>
+      </div>
+
+      <div class="provider-card">
+        <h3>Ollama Cloud</h3>
+        <p class="muted small">Uses ollama.com hosted models. Local Ollama not supported here.</p>
+        <label>API key
+          <input type="password" id="key-ollama" autocomplete="off" placeholder="ollama key" />
+        </label>
+        <label>Default model
+          <select id="model-ollama">
+            <option value="gpt-oss:20b">gpt-oss:20b</option>
+            <option value="gpt-oss:120b">gpt-oss:120b</option>
+            <option value="deepseek-v3.1:671b">deepseek-v3.1:671b</option>
+            <option value="qwen3-coder:480b">qwen3-coder:480b</option>
+            <option value="kimi-k2:1t">kimi-k2:1t</option>
+          </select>
+        </label>
+        <button class="link" data-test="ollama">Test connection</button>
+        <span class="test-result" data-test-result="ollama"></span>
+      </div>
+
+      <h2>Data</h2>
+      <div class="data-actions">
+        <button id="exportBtn">Export all data (JSON)</button>
+        <button id="importBtn">Import…</button>
+        <input type="file" id="importFile" accept="application/json" hidden />
+        <button id="wipeBtn" class="danger">Wipe everything</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="contactsDialog" class="dialog">
+    <form method="dialog">
+      <h3>Contacts</h3>
+      <p class="muted small">Contacts are local placeholders. Use them as "senders" in chats and groups.</p>
+      <ul id="contactsList" class="contacts-list"></ul>
+      <div class="dialog-row">
+        <input id="newContactName" placeholder="Name" />
+        <input id="newContactColor" type="color" value="#7c3aed" />
+        <button id="addContactBtn" type="button">Add</button>
+      </div>
+      <menu>
+        <button value="close">Done</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="membersDialog" class="dialog">
+    <form method="dialog">
+      <h3>Group members</h3>
+      <ul id="memberCheckList" class="contacts-list"></ul>
+      <menu>
+        <button value="close">Done</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="promptDialog" class="dialog">
+    <form method="dialog">
+      <h3 id="promptTitle">Title</h3>
+      <input id="promptInput" />
+      <menu>
+        <button value="cancel">Cancel</button>
+        <button id="promptOk" value="ok">OK</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
