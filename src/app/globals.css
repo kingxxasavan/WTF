@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+html, body, #__next { height: 100%; }
+body {
+  background:
+    radial-gradient(900px 600px at 80% -10%, rgba(124,92,255,.10), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, rgba(91,140,255,.10), transparent 60%),
+    theme(colors.white);
+  color: theme(colors.ink.900);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+html.dark body {
+  background:
+    radial-gradient(900px 600px at 80% -10%, rgba(124,92,255,.18), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, rgba(91,140,255,.18), transparent 60%),
+    theme(colors.ink.950);
+  color: theme(colors.ink.50);
+}
+
+/* Subtle, custom scrollbars */
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(120,120,140,.25);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover { background: rgba(120,120,140,.45); }
+
+/* A reusable "panel" — glassy in dark, clean in light */
+.panel {
+  @apply rounded-2xl border;
+  background: rgba(255,255,255,.7);
+  border-color: rgba(15,17,21,.08);
+  backdrop-filter: blur(8px);
+}
+html.dark .panel {
+  background: rgba(31,33,40,.55);
+  border-color: rgba(255,255,255,.06);
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition;
+}
+.btn-primary {
+  @apply btn text-white;
+  background: linear-gradient(180deg, theme(colors.accent.DEFAULT), #5e3df0);
+  box-shadow: 0 6px 24px -10px rgba(124,92,255,.7);
+}
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-ghost {
+  @apply btn text-ink-700 dark:text-ink-100 hover:bg-black/5 dark:hover:bg-white/5;
+}
+.btn-danger {
+  @apply btn text-red-600 hover:bg-red-500/10;
+}
+
+.input {
+  @apply w-full rounded-xl border bg-white/70 px-3 py-2 text-sm outline-none transition
+         border-ink-200 focus:border-accent focus:ring-2 focus:ring-accent/30
+         dark:bg-ink-900/60 dark:border-ink-700 dark:text-ink-50;
+}
+
+.label {
+  @apply mb-1 block text-xs font-medium tracking-wide uppercase text-ink-500 dark:text-ink-400;
+}
+
+.bubble {
+  @apply rounded-2xl px-3.5 py-2 text-[15px] leading-snug;
+  word-break: break-word;
+}
+.bubble-them {
+  @apply bg-white/80 text-ink-900 dark:bg-ink-800/80 dark:text-ink-50;
+  border: 1px solid rgba(15,17,21,.06);
+}
+html.dark .bubble-them { border-color: rgba(255,255,255,.05); }
+.bubble-me {
+  @apply text-white;
+  background: linear-gradient(180deg, theme(colors.accent.DEFAULT), #5e3df0);
+}
+
+.shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.06) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
